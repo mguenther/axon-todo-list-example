@@ -1,5 +1,7 @@
 # Axon Framework - Event-sourced Todo List
 
+[![Build Status](https://travis-ci.org/mguenther/axon-todo-list-example.svg?branch=master)](https://travis-ci.org/mguenther/axon-todo-list-example.svg)
+
 This repository contains an example application that demonstrates how to implement an Event-sourced system using the Axon stack. The Axon stack consists of the [Axon Framework](https://axoniq.io/product-overview/axon-framework), which is used to build the application, and the [Axon Server](https://axoniq.io/product-overview/axon-server), which is a zero-configuration event store that works out-of-the-box.
 
 The application is implemented on top of Spring Boot and uses the Spring Boot starter for Axon. The programming model of Axon integrates quite nicely with what we expect from a Spring experience - hopefully, you'll see this yourself by consulting the code.
