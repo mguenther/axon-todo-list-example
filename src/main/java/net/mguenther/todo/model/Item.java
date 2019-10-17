@@ -21,10 +21,6 @@ public class Item {
   @AggregateIdentifier
   private String itemId;
 
-  // We could actually omit the description member in this aggregate as we only have to keep the state that is
-  // required for validating incoming commands against the state of the aggregate
-  private String description;
-
   private boolean concluded;
 
   @CommandHandler
@@ -59,7 +55,6 @@ public class Item {
   @EventSourcingHandler
   public void onEvent(final ItemCreatedEvent event) {
     this.itemId = event.getItemId();
-    this.description = event.getDescription();
     this.concluded = false;
   }
 
