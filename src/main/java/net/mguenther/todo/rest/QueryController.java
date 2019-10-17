@@ -1,5 +1,10 @@
 package net.mguenther.todo.rest;
 
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
+import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.ApiResponses;
 import lombok.RequiredArgsConstructor;
 import net.mguenther.todo.api.AllActiveItemsQuery;
 import net.mguenther.todo.api.ConcludedItemsQuery;
@@ -23,26 +28,41 @@ import java.util.concurrent.Future;
 
 @RestController
 @RequiredArgsConstructor
+@Api(value = "Query Controller", description = "Provides the means to query for projections on todo list items.")
 public class QueryController {
 
   private final QueryGateway queryGateway;
   private final ItemReprConverter converter;
 
+  @ApiOperation("Retrieves all todo list items that are currently open.")
+  @ApiResponses(value = {
+      @ApiResponse(code = 200, message = "All currently open todo list items have been successfully retrieved.", response = List.class),
+      @ApiResponse(code = 500, message = "An internal error occured while retrieving all currently open todo list items.")
+  })
   @GetMapping(path = "/items", produces = MediaType.APPLICATION_JSON_VALUE)
   public Future<List<ActiveItemSummaryRepr>> showActiveItems() {
-
     return queryGateway
         .query(new AllActiveItemsQuery(), ResponseTypes.multipleInstancesOf(ActiveItem.class))
         .thenApply(converter::convertActiveItems);
   }
 
+  @ApiOperation("Retrieves a detailed representation of the requested todo list item.")
+  @ApiResponses(value = {
+      @ApiResponse(code = 200, message = "Contains a detailed representation of the requested todo list item.", response = ItemDetailsRepr.class),
+      @ApiResponse(code = 500, message = "An internal error occured while retrieving the detailed representation of the requested todo list item.")
+  })
   @GetMapping(path = "/items/{itemId}", produces = MediaType.APPLICATION_JSON_VALUE)
-  public Future<ItemDetailsRepr> showDetailsForItem(@PathVariable("itemId") final String itemId) {
+  public Future<ItemDetailsRepr> showDetailsForItem(@ApiParam(value = "itemId", required = true) @PathVariable final String itemId) {
     return queryGateway
         .query(new ShowDetailsForItemQuery(itemId), ResponseTypes.instanceOf(ItemDetails.class))
         .thenApply(converter::convertItemDetails);
   }
 
+  @ApiOperation("Retrieves a brief summary of all concluded todo list items.")
+  @ApiResponses(value = {
+      @ApiResponse(code = 200, message = "The list of all concluded items has been successfully retrieved.", response = List.class),
+      @ApiResponse(code = 500, message = "An internal error occured while retrieving all concluded todo list items.")
+  })
   @GetMapping(path = "/concluded-items", produces = MediaType.APPLICATION_JSON_VALUE)
   public Future<List<ConcludedItemSummaryRepr>> showConcludedItems() {
     return queryGateway
