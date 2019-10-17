@@ -58,4 +58,4 @@ The example application has the H2 console configured. You can take a look at th
 
 ## License
 
-This work is released under the terms of the MIT license.
+This work is released under the terms of the Apache 2.0 license.
